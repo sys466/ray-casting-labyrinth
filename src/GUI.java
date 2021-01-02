@@ -43,13 +43,15 @@ public class GUI extends JFrame {
     }
 
     public static void calculateMouseMovement() {
-        if (MouseInfo.getPointerInfo().getLocation().getX() > mouseX) {
-            ScreenRenderer.changeUnitPlayerViewAngle(0.06);  // CALCULATE VALUE BASE ON MOUSE POSITION CHANGE
-        } else if (MouseInfo.getPointerInfo().getLocation().getX() < mouseX) {
-            ScreenRenderer.changeUnitPlayerViewAngle(-0.06);  // BIGGER MOUSE POSITION CHANGE - BIGGER VALUE
+        double newMouseX = MouseInfo.getPointerInfo().getLocation().getX();
+        double changeValue = Math.abs(newMouseX - mouseX) / 1000;
+        if (newMouseX > mouseX) {
+            ScreenRenderer.changeUnitPlayerViewAngle(changeValue);
+        } else if (newMouseX < mouseX) {
+            ScreenRenderer.changeUnitPlayerViewAngle(-changeValue);
         }
-        mouseX = MouseInfo.getPointerInfo().getLocation().getX();
-        if (mouseX > 1560 || mouseX < 360) {  // MAKE LESS SPECIFIC
+        mouseX = newMouseX;
+        if (mouseX > 1260 || mouseX < 460) {  // MAKE LESS SPECIFIC
             robot.mouseMove(960, 540);  // CALCULATE CENTER BASED ON RESOLUTION
             mouseX = 960;
         }
