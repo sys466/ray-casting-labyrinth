@@ -17,7 +17,7 @@ public class Main {
                 ScreenRenderer.exitingMessage();
                 break;
             }
-            Thread.sleep(32);
+            Thread.sleep(1000 / 60);
         }
 
     }
