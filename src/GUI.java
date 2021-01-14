@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 public class GUI extends JFrame {
 
@@ -21,24 +22,24 @@ public class GUI extends JFrame {
 
     private static final JTextPane viewPort = new JTextPane();
 
-    private static final boolean[] controls = {false, false, false, false};  // CHANGE TO MAP FOR BETTER CLARITY
+    private static final HashMap<String, Boolean> controls = new HashMap<>();
 
     public static void renderScreen(String screenData) {
         viewPort.setText(screenData);
     }
 
-    public static void calculatePlayerMovement() {  // DON'T FORGET TO CHANGE WITH MAP IMPLEMENTATION
-        if (controls[0]) {
-            ScreenRenderer.changeUnitPlayerPosition(0.1, false);
+    public static void calculatePlayerMovement() {
+        if (controls.get("UP")) {
+            ScreenRenderer.changeUnitPlayerPosition(0.05, false);
         }
-        if (controls[1]) {
-            ScreenRenderer.changeUnitPlayerPosition(-0.1, false);
+        if (controls.get("DOWN")) {
+            ScreenRenderer.changeUnitPlayerPosition(-0.05, false);
         }
-        if (controls[2]) {
-            ScreenRenderer.changeUnitPlayerPosition(-0.1, true);
+        if (controls.get("LEFT")) {
+            ScreenRenderer.changeUnitPlayerPosition(-0.05, true);
         }
-        if (controls[3]) {
-            ScreenRenderer.changeUnitPlayerPosition(0.1, true);
+        if (controls.get("RIGHT")) {
+            ScreenRenderer.changeUnitPlayerPosition(0.05, true);
         }
     }
 
@@ -70,7 +71,10 @@ public class GUI extends JFrame {
         setLayout(null);
         setResizable(false);
         setVisible(true);
-
+        controls.put("UP", false);
+        controls.put("DOWN", false);
+        controls.put("LEFT", false);
+        controls.put("RIGHT", false);
     }
 
     private void initComponents() {
@@ -97,18 +101,18 @@ public class GUI extends JFrame {
             }
 
             @Override
-            public void keyPressed(KeyEvent e) {  // DON'T FORGET TO CHANGE WITH MAP IMPLEMENTATION
+            public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_W) {
-                    controls[0] = true;
+                    controls.replace("UP", true);
                 }
                 if (e.getKeyCode() == KeyEvent.VK_S) {
-                    controls[1] = true;
+                    controls.replace("DOWN", true);
                 }
                 if (e.getKeyCode() == KeyEvent.VK_A) {
-                    controls[2] = true;
+                    controls.replace("LEFT", true);
                 }
                 if (e.getKeyCode() == KeyEvent.VK_D) {
-                    controls[3] = true;
+                    controls.replace("RIGHT", true);
                 }
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     System.exit(0);
@@ -116,18 +120,18 @@ public class GUI extends JFrame {
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {  // DON'T FORGET TO CHANGE WITH MAP IMPLEMENTATION
+            public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_W) {
-                    controls[0] = false;
+                    controls.replace("UP", false);
                 }
                 if (e.getKeyCode() == KeyEvent.VK_S) {
-                    controls[1] = false;
+                    controls.replace("DOWN", false);
                 }
                 if (e.getKeyCode() == KeyEvent.VK_A) {
-                    controls[2] = false;
+                    controls.replace("LEFT", false);
                 }
                 if (e.getKeyCode() == KeyEvent.VK_D) {
-                    controls[3] = false;
+                    controls.replace("RIGHT", false);
                 }
             }
         });
