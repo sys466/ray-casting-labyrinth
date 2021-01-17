@@ -4,8 +4,14 @@ public class ScreenRenderer {
     private static double unitPlayerPositionY;
     private static double unitPlayerViewAngle = 0;
     private static final double UNIT_PLAYER_VIEW_DISTANCE = 16.0;
-    private static double unitPlayerFOVVectorDistance;
+    private static double unitPlayerFOVVectorWallDistance;
+    private static double unitPlayerFOVVectorCardDistance;
     private static boolean isFOVVectorReachedWall;
+    private static int cardVectorsSum;
+    private static int cardVectorsCount;
+    private static int cardScreenPosition;
+    private static int cardWidth;
+    private static int cardHeight;
     private static final int MAP_WIDTH = 24;
     private static final int MAP_HEIGHT = 24;
     private static final char[][] levelMap = new char[MAP_HEIGHT][MAP_WIDTH];
@@ -49,13 +55,13 @@ public class ScreenRenderer {
                 "# # #              # # #" +
                 "# # # ##### ###### # # #" +
                 "# ######### #    # # # #" +
-                "#           # #  # # # #" +
+                "#K          # #  # # # #" +
                 "############### ## #   #" +
                 "#      #   #### ## #####" +
                 "# #### # # ##          #" +
-                "# #    # # ##          #" +
+                "# #    # # ##     K    #" +
                 "# #### # ####          #" +
-                "# #    #      #      # #" +
+                "# #    #      ###### # #" +
                 "# #### ########      # #" +
                 "#   E#        #### ### #" +
                 "#############      #   #" +
@@ -63,6 +69,7 @@ public class ScreenRenderer {
 
         // P - PLAYER
         // E - EXIT
+        // K - KEY
         // # - WALL
 
         int levelMapDataIndex = 0;
@@ -83,12 +90,21 @@ public class ScreenRenderer {
         double unitPlayerFOVVector = unitPlayerViewAngle - unitPlayerFOV / 2 + unitPlayerFOV / SCREEN_WIDTH * w;
         double unitPlayerFOVX = Math.sin(unitPlayerFOVVector);
         double unitPlayerFOVY = Math.cos(unitPlayerFOVVector);
+        boolean isFOVVectorReachedCard = false;
         isFOVVectorReachedWall = false;
-        unitPlayerFOVVectorDistance = 0;
-        while (!isFOVVectorReachedWall && unitPlayerFOVVectorDistance < UNIT_PLAYER_VIEW_DISTANCE) {
-            unitPlayerFOVVectorDistance += 0.1;
-            if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorDistance)] == '#') {
+        unitPlayerFOVVectorWallDistance = 0;
+        while (!isFOVVectorReachedWall && unitPlayerFOVVectorWallDistance < UNIT_PLAYER_VIEW_DISTANCE) {
+            unitPlayerFOVVectorWallDistance += 0.1;
+            if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == '#') {
                 isFOVVectorReachedWall = true;
+            }
+            if (!isFOVVectorReachedCard) {
+                if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == 'K') {
+                    isFOVVectorReachedCard = true;
+                    cardVectorsSum += w;
+                    cardVectorsCount++;
+                    unitPlayerFOVVectorCardDistance = unitPlayerFOVVectorWallDistance;
+                }
             }
         }
     }
@@ -107,6 +123,40 @@ public class ScreenRenderer {
         }
     }
 
+    private static int calculateCardParameters(boolean width) {
+        if (unitPlayerFOVVectorCardDistance > 14) {
+              return width ? 2 : 1;
+        } else if (unitPlayerFOVVectorCardDistance > 12) {
+            return width ? 4 : 1;
+        } else if (unitPlayerFOVVectorCardDistance > 10) {
+            return width ? 6 : 1;
+        } else if (unitPlayerFOVVectorCardDistance > 8) {
+            return width ? 8 : 1;
+        } else if (unitPlayerFOVVectorCardDistance > 6) {
+            return width ? 11 : 2;
+        } else if (unitPlayerFOVVectorCardDistance > 4) {
+            return width ? 14 : 2;
+        } else if (unitPlayerFOVVectorCardDistance > 2) {
+            return width ? 17 : 2;
+        } else {
+            return width ? 21 : 3;
+        }
+    }
+
+    private static void drawCard() {
+        for (int i = 0; i < cardHeight; i++) {
+            // 18 - i
+            int index = (19 - i) * 121 + cardScreenPosition;
+            for (int j = index; j < index + cardWidth; j++) {
+                if (j == (20 - i) * 121 - 1) {
+                    break;
+                } else {
+                    screen.setCharAt(j, '#');
+                }
+            }
+        }
+    }
+
     private static void completeScreenData() {
         for (int h = SCREEN_HEIGHT / 2 - 1; h >= 0; h--) {
             screen.append(screen.substring(h * 121, (h + 1) * 121));
@@ -115,13 +165,24 @@ public class ScreenRenderer {
 
     public static void runScreenRenderingCycle() {
         screen.append(SCREEN_TEMPLATE);
+        cardVectorsSum = 0;
+        cardVectorsCount = 0;
         for (int w = 0; w < SCREEN_WIDTH; w++) {
             calculateVectorDistance(w);
             if (isFOVVectorReachedWall) {
-                screenWallPoint = (int) Math.floor(SCREEN_HEIGHT / 2.0 - SCREEN_HEIGHT / 2.0 / (unitPlayerFOVVectorDistance * 1.25));
+                screenWallPoint = (int) Math.floor(SCREEN_HEIGHT / 2.0 - SCREEN_HEIGHT / 2.0 / (unitPlayerFOVVectorWallDistance * 1.25));
                 if (screenWallPoint < 0) { screenWallPoint = 0; }
                 calculateScreenData(w);
             }
+        }
+        if (cardVectorsCount > 0) {
+            cardWidth = calculateCardParameters(true);
+            cardHeight = calculateCardParameters(false);
+            cardScreenPosition = cardVectorsSum / cardVectorsCount - cardWidth / 2;
+            if (cardScreenPosition < 0) {
+                cardScreenPosition = 0;
+            }
+            drawCard();
         }
         completeScreenData();
         GUI.renderScreen(screen.toString());
@@ -147,6 +208,10 @@ public class ScreenRenderer {
 
     public static boolean checkUnitPlayerPositionOnExit() {
         return levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX)] == 'E';
+    }
+
+    public static boolean checkUnitPlayerPositionOnCard() {
+        return levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX)] == 'K';
     }
 
     public static void exitingMessage() {  // REWORK MESSAGE
