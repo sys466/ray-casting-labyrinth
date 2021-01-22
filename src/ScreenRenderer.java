@@ -124,23 +124,7 @@ public class ScreenRenderer {
     }
 
     private static int calculateCardParameters(boolean width) {
-        if (unitPlayerFOVVectorCardDistance > 14) {
-              return width ? 2 : 1;
-        } else if (unitPlayerFOVVectorCardDistance > 12) {
-            return width ? 4 : 1;
-        } else if (unitPlayerFOVVectorCardDistance > 10) {
-            return width ? 6 : 1;
-        } else if (unitPlayerFOVVectorCardDistance > 8) {
-            return width ? 8 : 1;
-        } else if (unitPlayerFOVVectorCardDistance > 6) {
-            return width ? 11 : 2;
-        } else if (unitPlayerFOVVectorCardDistance > 4) {
-            return width ? 14 : 2;
-        } else if (unitPlayerFOVVectorCardDistance > 2) {
-            return width ? 17 : 2;
-        } else {
-            return width ? 21 : 3;
-        }
+        return width ? (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) * 1.25) : (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) / 4);
     }
 
     private static void drawCard() {
@@ -151,7 +135,7 @@ public class ScreenRenderer {
                 if (j == (20 - i) * 121 - 1) {
                     break;
                 } else {
-                    screen.setCharAt(j, '#');
+                    screen.setCharAt(j, unitPlayerFOVVectorCardDistance > 8 ? ':' : '#');  // TEMPORARY SOLUTION
                 }
             }
         }
