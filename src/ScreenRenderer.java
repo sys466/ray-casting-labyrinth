@@ -7,6 +7,7 @@ public class ScreenRenderer {
     private static double unitPlayerFOVVectorWallDistance;
     private static double unitPlayerFOVVectorCardDistance;
     private static boolean isFOVVectorReachedWall;
+    private static boolean isFOVVectorReachedExit;
     private static int cardVectorsSum;
     private static int cardVectorsCount;
     private static int cardScreenPosition;
@@ -63,8 +64,8 @@ public class ScreenRenderer {
                 "# #### # ####          #" +
                 "# #    #      ###### # #" +
                 "# #### ########      # #" +
-                "#   E#        #### ### #" +
-                "#############      #   #" +
+                "#    #        #### ### #" +
+                "####E########      #   #" +
                 "########################";
 
         // P - PLAYER
@@ -92,11 +93,14 @@ public class ScreenRenderer {
         double unitPlayerFOVY = Math.cos(unitPlayerFOVVector);
         boolean isFOVVectorReachedCard = false;
         isFOVVectorReachedWall = false;
+        isFOVVectorReachedExit = false;
         unitPlayerFOVVectorWallDistance = 0;
-        while (!isFOVVectorReachedWall && unitPlayerFOVVectorWallDistance < UNIT_PLAYER_VIEW_DISTANCE) {
+        while (!isFOVVectorReachedWall && !isFOVVectorReachedExit && unitPlayerFOVVectorWallDistance < UNIT_PLAYER_VIEW_DISTANCE) {
             unitPlayerFOVVectorWallDistance += 0.1;
             if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == '#') {
                 isFOVVectorReachedWall = true;
+            } else if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == 'E') {
+                isFOVVectorReachedExit = true;
             }
             if (!isFOVVectorReachedCard) {
                 if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == 'K') {
@@ -112,11 +116,11 @@ public class ScreenRenderer {
     private static void calculateScreenData(int w) {
         for (int h = screenWallPoint; h < SCREEN_HEIGHT / 2; h++) {
             if (screenWallPoint < SCREEN_HEIGHT * 0.125) {
-                screen.setCharAt(h * 121 + w, '‖');
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '‖' : 'X');  // TEMPORARY SOLUTION
             } else if (screenWallPoint < SCREEN_HEIGHT * 0.25) {
-                screen.setCharAt(h * 121 + w, '|');
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '|' : 'x');  // TEMPORARY SOLUTION
             } else if (screenWallPoint < SCREEN_HEIGHT * 0.375) {
-                screen.setCharAt(h * 121 + w, ':');
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? ':' : '^');  // TEMPORARY SOLUTION
             } else {
                 screen.setCharAt(h * 121 + w, '·');
             }
@@ -129,7 +133,6 @@ public class ScreenRenderer {
 
     private static void drawCard() {
         for (int i = 0; i < cardHeight; i++) {
-            // 18 - i
             int index = (19 - i) * 121 + cardScreenPosition;
             for (int j = index; j < index + cardWidth; j++) {
                 if (j == (20 - i) * 121 - 1) {
@@ -153,7 +156,7 @@ public class ScreenRenderer {
         cardVectorsCount = 0;
         for (int w = 0; w < SCREEN_WIDTH; w++) {
             calculateVectorDistance(w);
-            if (isFOVVectorReachedWall) {
+            if (isFOVVectorReachedWall || isFOVVectorReachedExit) {
                 screenWallPoint = (int) Math.floor(SCREEN_HEIGHT / 2.0 - SCREEN_HEIGHT / 2.0 / (unitPlayerFOVVectorWallDistance * 1.25));
                 if (screenWallPoint < 0) { screenWallPoint = 0; }
                 calculateScreenData(w);
