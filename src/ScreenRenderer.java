@@ -8,6 +8,8 @@ public class ScreenRenderer {
     private static double unitPlayerFOVVectorCardDistance;
     private static boolean isFOVVectorReachedWall;
     private static boolean isFOVVectorReachedExit;
+    private static final int cardNumber = 3;
+    private static int currentCardNumber = 0;
     private static int cardVectorsSum;
     private static int cardVectorsCount;
     private static int cardScreenPosition;
@@ -46,31 +48,31 @@ public class ScreenRenderer {
                 "########################" +
                 "#    P    #        ### #" +
                 "# ####### # #### ##### #" +
-                "# #     #   ## # #  #  #" +
-                "# # ### # # ##   #  # ##" +
+                "# #     #   ## # # C#  #" +
+                "#C# ### # # ##   #  # ##" +
                 "# # # #   # ## # #  # ##" +
                 "# ### ##### ####       #" +
-                "#           #### ##### #" +
+                "E    C      #### ##### #" +
                 "# # ### ##           # #" +
                 "# # ### ############ # #" +
                 "# # #              # # #" +
-                "# # # ##### ###### # # #" +
+                "#C# # ##### ###### # # #" +
                 "# ######### #    # # # #" +
-                "#K          # #  # # # #" +
+                "#           #C#  # # # #" +
                 "############### ## #   #" +
                 "#      #   #### ## #####" +
                 "# #### # # ##          #" +
-                "# #    # # ##     K    #" +
+                "# #    # # ##          #" +
                 "# #### # ####          #" +
                 "# #    #      ###### # #" +
                 "# #### ########      # #" +
                 "#    #        #### ### #" +
-                "####E########      #   #" +
+                "####E########      #C  #" +
                 "########################";
 
         // P - PLAYER
         // E - EXIT
-        // K - KEY
+        // C - CARD
         // # - WALL
 
         int levelMapDataIndex = 0;
@@ -103,7 +105,7 @@ public class ScreenRenderer {
                 isFOVVectorReachedExit = true;
             }
             if (!isFOVVectorReachedCard) {
-                if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == 'K') {
+                if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == 'C') {
                     isFOVVectorReachedCard = true;
                     cardVectorsSum += w;
                     cardVectorsCount++;
@@ -116,11 +118,11 @@ public class ScreenRenderer {
     private static void calculateScreenData(int w) {
         for (int h = screenWallPoint; h < SCREEN_HEIGHT / 2; h++) {
             if (screenWallPoint < SCREEN_HEIGHT * 0.125) {
-                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '‖' : 'X');  // TEMPORARY SOLUTION
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '‖' : 'X');  // TEMPORARY SOLUTION?
             } else if (screenWallPoint < SCREEN_HEIGHT * 0.25) {
-                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '|' : 'x');  // TEMPORARY SOLUTION
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '|' : 'x');  // TEMPORARY SOLUTION?
             } else if (screenWallPoint < SCREEN_HEIGHT * 0.375) {
-                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? ':' : '^');  // TEMPORARY SOLUTION
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? ':' : '+');  // TEMPORARY SOLUTION?
             } else {
                 screen.setCharAt(h * 121 + w, '·');
             }
@@ -193,12 +195,21 @@ public class ScreenRenderer {
         }
     }
 
-    public static boolean checkUnitPlayerPositionOnExit() {
-        return levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX)] == 'E';
+    public static boolean checkUnitPlayerPositionNextToExit() {
+        return levelMap[(int) unitPlayerPositionY][(int) unitPlayerPositionX] == 'E';
     }
 
     public static boolean checkUnitPlayerPositionOnCard() {
-        return levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX)] == 'K';
+        return levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX)] == 'C';
+    }
+
+    public static void pickUpCard() {
+        levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX)] = ' ';
+        currentCardNumber++;
+    }
+
+    public static boolean checkIfAllCardsCollected() {
+        return currentCardNumber == cardNumber;
     }
 
     public static void exitingMessage() {  // REWORK MESSAGE
