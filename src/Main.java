@@ -13,9 +13,12 @@ public class Main {
             ScreenRenderer.runScreenRenderingCycle();
             GUI.calculatePlayerMovement();
             GUI.calculateMouseMovement();
-            if (ScreenRenderer.checkUnitPlayerPositionOnExit()) {
+            if (ScreenRenderer.checkUnitPlayerPositionNextToExit() && ScreenRenderer.checkIfAllCardsCollected()) {
                 ScreenRenderer.exitingMessage();
                 break;
+            }
+            if (ScreenRenderer.checkUnitPlayerPositionOnCard()) {
+                ScreenRenderer.pickUpCard();
             }
             Thread.sleep(1000 / 60);
         }
