@@ -49,14 +49,14 @@ public class ScreenRenderer {
                 "#    P    #        ### #" +
                 "# ####### # #### ##### #" +
                 "# #     #   ## # # C#  #" +
-                "#C# ### # # ##   #  # ##" +
+                "# # ### # # ##   #  # ##" +
                 "# # # #   # ## # #  # ##" +
                 "# ### ##### ####       #" +
-                "E    C      #### ##### #" +
+                "#           #### ##### #" +
                 "# # ### ##           # #" +
                 "# # ### ############ # #" +
                 "# # #              # # #" +
-                "#C# # ##### ###### # # #" +
+                "# # # ##### ###### # # #" +
                 "# ######### #    # # # #" +
                 "#           #C#  # # # #" +
                 "############### ## #   #" +
@@ -99,13 +99,14 @@ public class ScreenRenderer {
         unitPlayerFOVVectorWallDistance = 0;
         while (!isFOVVectorReachedWall && !isFOVVectorReachedExit && unitPlayerFOVVectorWallDistance < UNIT_PLAYER_VIEW_DISTANCE) {
             unitPlayerFOVVectorWallDistance += 0.1;
-            if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == '#') {
+            int positionYChange = (int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance);
+            int positionXChange = (int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance);
+            if (levelMap[positionYChange][positionXChange] == '#') {
                 isFOVVectorReachedWall = true;
-            } else if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == 'E') {
+            } else if (levelMap[positionYChange][positionXChange] == 'E') {
                 isFOVVectorReachedExit = true;
-            }
-            if (!isFOVVectorReachedCard) {
-                if (levelMap[(int) (unitPlayerPositionY + unitPlayerFOVY * unitPlayerFOVVectorWallDistance)][(int) (unitPlayerPositionX + unitPlayerFOVX * unitPlayerFOVVectorWallDistance)] == 'C') {
+            } else if (!isFOVVectorReachedCard) {
+                if (levelMap[positionYChange][positionXChange] == 'C') {
                     isFOVVectorReachedCard = true;
                     cardVectorsSum += w;
                     cardVectorsCount++;
@@ -130,7 +131,7 @@ public class ScreenRenderer {
     }
 
     private static int calculateCardParameters(boolean width) {
-        return width ? (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) * 1.25) : (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) / 4);
+        return width ? (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) * 1.4) : (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) / 4);
     }
 
     private static void drawCard() {
@@ -185,18 +186,23 @@ public class ScreenRenderer {
         if (isSidewalk) {
             unitPlayerViewAngleData += Math.PI / 2;
         }
-        double unitPlayerPositionXStep = Math.sin(unitPlayerViewAngleData) * value;
         double unitPlayerPositionYStep = Math.cos(unitPlayerViewAngleData) * value;
-        if (levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX + unitPlayerPositionXStep)] != '#') {
-            unitPlayerPositionX += unitPlayerPositionXStep;
-        }
-        if (levelMap[(int) (unitPlayerPositionY + unitPlayerPositionYStep)][(int) unitPlayerPositionX] != '#') {
+        double unitPlayerPositionXStep = Math.sin(unitPlayerViewAngleData) * value;
+        if (levelMap[(int) (unitPlayerPositionY + unitPlayerPositionYStep)][(int) unitPlayerPositionX] != '#'
+            && levelMap[(int) (unitPlayerPositionY + unitPlayerPositionYStep)][(int) unitPlayerPositionX] != 'E') {
             unitPlayerPositionY += unitPlayerPositionYStep;
+        }
+        if (levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX + unitPlayerPositionXStep)] != '#'
+            && levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX + unitPlayerPositionXStep)] != 'E') {
+            unitPlayerPositionX += unitPlayerPositionXStep;
         }
     }
 
     public static boolean checkUnitPlayerPositionNextToExit() {
-        return levelMap[(int) unitPlayerPositionY][(int) unitPlayerPositionX] == 'E';
+        return levelMap[(int) unitPlayerPositionY + 1][(int) unitPlayerPositionX] == 'E'
+                || levelMap[(int) unitPlayerPositionY - 1][(int) unitPlayerPositionX] == 'E'
+                || levelMap[(int) unitPlayerPositionY][(int) unitPlayerPositionX + 1] == 'E'
+                || levelMap[(int) unitPlayerPositionY][(int) unitPlayerPositionX - 1] == 'E';
     }
 
     public static boolean checkUnitPlayerPositionOnCard() {
