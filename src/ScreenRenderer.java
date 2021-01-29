@@ -1,5 +1,8 @@
+import java.util.Random;
+
 public class ScreenRenderer {
 
+    private static final Random random = new Random();
     private static double unitPlayerPositionX;
     private static double unitPlayerPositionY;
     private static double unitPlayerViewAngle = 0;
@@ -8,7 +11,7 @@ public class ScreenRenderer {
     private static double unitPlayerFOVVectorCardDistance;
     private static boolean isFOVVectorReachedWall;
     private static boolean isFOVVectorReachedExit;
-    private static final int cardNumber = 3;
+    private static final int CARD_NUMBER = 3;
     private static int currentCardNumber = 0;
     private static int cardVectorsSum;
     private static int cardVectorsCount;
@@ -48,7 +51,7 @@ public class ScreenRenderer {
                 "########################" +
                 "#    P    #        ### #" +
                 "# ####### # #### ##### #" +
-                "# #     #   ## # # C#  #" +
+                "# #     #   ## # #  #  #" +
                 "# # ### # # ##   #  # ##" +
                 "# # # #   # ## # #  # ##" +
                 "# ### ##### ####       #" +
@@ -58,7 +61,7 @@ public class ScreenRenderer {
                 "# # #              # # #" +
                 "# # # ##### ###### # # #" +
                 "# ######### #    # # # #" +
-                "#           #C#  # # # #" +
+                "#           # #  # # # #" +
                 "############### ## #   #" +
                 "#      #   #### ## #####" +
                 "# #### # # ##          #" +
@@ -67,7 +70,7 @@ public class ScreenRenderer {
                 "# #    #      ###### # #" +
                 "# #### ########      # #" +
                 "#    #        #### ### #" +
-                "####E########      #C  #" +
+                "####E########      #   #" +
                 "########################";
 
         // P - PLAYER
@@ -85,6 +88,20 @@ public class ScreenRenderer {
                 }
                 levelMapDataIndex++;
             }
+        }
+        generateCards();
+    }
+
+    private static void generateCards() {
+        int cardPositionY;
+        int cardPositionX;
+        while (currentCardNumber < CARD_NUMBER) {
+            do {
+                cardPositionY = random.nextInt(MAP_HEIGHT - 1) + 1;
+                cardPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
+            } while (levelMap[cardPositionY][cardPositionX] != ' ');
+            levelMap[cardPositionY][cardPositionX] = 'C';
+            currentCardNumber++;
         }
     }
 
@@ -215,7 +232,7 @@ public class ScreenRenderer {
     }
 
     public static boolean checkIfAllCardsCollected() {
-        return currentCardNumber == cardNumber;
+        return currentCardNumber == CARD_NUMBER;
     }
 
     public static void exitingMessage() {  // REWORK MESSAGE
