@@ -3,8 +3,8 @@ import java.util.Random;
 public class ScreenRenderer {
 
     private static final Random random = new Random();
-    private static double unitPlayerPositionX;
     private static double unitPlayerPositionY;
+    private static double unitPlayerPositionX;
     private static double unitPlayerViewAngle = 0;
     private static final double UNIT_PLAYER_VIEW_DISTANCE = 16.0;
     private static double unitPlayerFOVVectorWallDistance;
@@ -49,7 +49,7 @@ public class ScreenRenderer {
     public static void initMap() {
         String levelMapData =
                 "########################" +
-                "#    P    #        ### #" +
+                "#         #        ### #" +
                 "# ####### # #### ##### #" +
                 "# #     #   ## # #  #  #" +
                 "# # ### # # ##   #  # ##" +
@@ -89,19 +89,28 @@ public class ScreenRenderer {
                 levelMapDataIndex++;
             }
         }
+        generatePlayer();
         generateCards();
     }
 
+    private static void generatePlayer() {
+        do {
+            unitPlayerPositionY = random.nextInt(MAP_HEIGHT - 1) + 1;
+            unitPlayerPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
+        } while (levelMap[(int) unitPlayerPositionY][(int) unitPlayerPositionX] != ' ');
+    }
+
     private static void generateCards() {
+        int cardNumber = 0;
         int cardPositionY;
         int cardPositionX;
-        while (currentCardNumber < CARD_NUMBER) {
+        while (cardNumber < CARD_NUMBER) {
             do {
                 cardPositionY = random.nextInt(MAP_HEIGHT - 1) + 1;
                 cardPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
             } while (levelMap[cardPositionY][cardPositionX] != ' ');
             levelMap[cardPositionY][cardPositionX] = 'C';
-            currentCardNumber++;
+            cardNumber++;
         }
     }
 
