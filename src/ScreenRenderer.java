@@ -62,15 +62,15 @@ public class ScreenRenderer {
                 "# # # ##### ###### # # #" +
                 "# ######### #    # # # #" +
                 "#           # #  # # # #" +
-                "############### ## #   #" +
+                "###### ###### # ## #   #" +
                 "#      #   #### ## #####" +
-                "# #### # # ##          #" +
-                "# #    # # ##          #" +
-                "# #### # ####          #" +
+                "# #### # # #           #" +
+                "# #    # # #    ###    #" +
+                "# #### # ###           #" +
                 "# #    #      ###### # #" +
                 "# #### ########      # #" +
                 "#    #        #### ### #" +
-                "####E########      #   #" +
+                "#    ########      #   #" +
                 "########################";
 
         // P - PLAYER
@@ -91,6 +91,7 @@ public class ScreenRenderer {
         }
         generatePlayer();
         generateCards();
+        generateExit();
     }
 
     private static void generatePlayer() {
@@ -111,6 +112,25 @@ public class ScreenRenderer {
             } while (levelMap[cardPositionY][cardPositionX] != ' ');
             levelMap[cardPositionY][cardPositionX] = 'C';
             cardNumber++;
+        }
+    }
+
+    private static void generateExit() {
+        int exitPositionY;
+        int exitPositionX;
+        boolean placed = false;
+        while (!placed) {
+            do {
+                exitPositionY = random.nextInt(MAP_WIDTH - 1) + 1;
+                exitPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
+            } while (levelMap[exitPositionY][exitPositionX] != '#');
+            if (levelMap[exitPositionY + 1][exitPositionX] == ' '
+                || levelMap[exitPositionY - 1][exitPositionX] == ' '
+                || levelMap[exitPositionY][exitPositionX + 1] == ' '
+                || levelMap[exitPositionY][exitPositionX - 1] == ' ') {
+                levelMap[exitPositionY][exitPositionX] = 'E';
+                placed = true;
+            }
         }
     }
 
