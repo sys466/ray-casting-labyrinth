@@ -1,10 +1,10 @@
-import java.util.Random;
+
 
 public class ScreenRenderer {
 
-    private static final Random random = new Random();
-    private static double unitPlayerPositionY;
-    private static double unitPlayerPositionX;
+    private static final char[][] levelMap = Map.initMap();
+    private static double unitPlayerPositionY = Map.getUnitPlayerPositionY();
+    private static double unitPlayerPositionX = Map.getUnitPlayerPositionX();
     private static double unitPlayerViewAngle = 0;
     private static final double UNIT_PLAYER_VIEW_DISTANCE = 16.0;
     private static double unitPlayerFOVVectorWallDistance;
@@ -18,9 +18,6 @@ public class ScreenRenderer {
     private static int cardScreenPosition;
     private static int cardWidth;
     private static int cardHeight;
-    private static final int MAP_WIDTH = 24;
-    private static final int MAP_HEIGHT = 24;
-    private static final char[][] levelMap = new char[MAP_HEIGHT][MAP_WIDTH];
     private static final int SCREEN_WIDTH = 120;
     private static final int SCREEN_HEIGHT = 40;
     private static final StringBuilder screen = new StringBuilder();
@@ -44,94 +41,6 @@ public class ScreenRenderer {
             template.append("\n");
         }
         return template.toString();
-    }
-
-    public static void initMap() {
-        String levelMapData =
-                "########################" +
-                "#         #        ### #" +
-                "# ####### # #### ##### #" +
-                "# #     #   ## # #  #  #" +
-                "# # ### # # ##   #  # ##" +
-                "# # # #   # ## # #  # ##" +
-                "# ### ##### ####       #" +
-                "#           #### ##### #" +
-                "# # ### ##           # #" +
-                "# # ### ############ # #" +
-                "# # #              # # #" +
-                "# # # ##### ###### # # #" +
-                "# ######### #    # # # #" +
-                "#           # #  # # # #" +
-                "###### ###### # ## #   #" +
-                "#      #   #### ## #####" +
-                "# #### # # #           #" +
-                "# #    # # #    ###    #" +
-                "# #### # ###           #" +
-                "# #    #      ###### # #" +
-                "# #### ########      # #" +
-                "#    #        #### ### #" +
-                "#    ########      #   #" +
-                "########################";
-
-        // P - PLAYER
-        // E - EXIT
-        // C - CARD
-        // # - WALL
-
-        int levelMapDataIndex = 0;
-        for (int h = 0; h < MAP_HEIGHT; h++) {
-            for (int w = 0; w < MAP_WIDTH; w++) {
-                levelMap[h][w] = levelMapData.charAt(levelMapDataIndex);
-                if (levelMapData.charAt(levelMapDataIndex) == 'P') {
-                    unitPlayerPositionX = levelMapDataIndex % MAP_WIDTH;
-                    unitPlayerPositionY = (double) levelMapDataIndex / MAP_WIDTH;
-                }
-                levelMapDataIndex++;
-            }
-        }
-        generatePlayer();
-        generateCards();
-        generateExit();
-    }
-
-    private static void generatePlayer() {
-        do {
-            unitPlayerPositionY = random.nextInt(MAP_HEIGHT - 1) + 1;
-            unitPlayerPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
-        } while (levelMap[(int) unitPlayerPositionY][(int) unitPlayerPositionX] != ' ');
-    }
-
-    private static void generateCards() {
-        int cardNumber = 0;
-        int cardPositionY;
-        int cardPositionX;
-        while (cardNumber < CARD_NUMBER) {
-            do {
-                cardPositionY = random.nextInt(MAP_HEIGHT - 1) + 1;
-                cardPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
-            } while (levelMap[cardPositionY][cardPositionX] != ' ');
-            levelMap[cardPositionY][cardPositionX] = 'C';
-            cardNumber++;
-        }
-    }
-
-    private static void generateExit() {
-        int exitPositionY;
-        int exitPositionX;
-        boolean placed = false;
-        while (!placed) {
-            do {
-                exitPositionY = random.nextInt(MAP_WIDTH - 1) + 1;
-                exitPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
-            } while (levelMap[exitPositionY][exitPositionX] != '#');
-            if (levelMap[exitPositionY + 1][exitPositionX] == ' '
-                || levelMap[exitPositionY - 1][exitPositionX] == ' '
-                || levelMap[exitPositionY][exitPositionX + 1] == ' '
-                || levelMap[exitPositionY][exitPositionX - 1] == ' ') {
-                levelMap[exitPositionY][exitPositionX] = 'E';
-                placed = true;
-            }
-        }
     }
 
     private static void calculateVectorDistance(int w) {
