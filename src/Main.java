@@ -5,7 +5,6 @@ public class Main {
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
 
-        ScreenRenderer.initMap();
         Runnable initGUI = GUI::new;
         SwingUtilities.invokeAndWait(initGUI);
 
