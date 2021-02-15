@@ -54,10 +54,26 @@ public class Map {
         "#          #     #     #" +
         "########################";
 
+    private static final String level3MapData =
+        "########################################" +
+        "#          #  ##  #     #    #   #   # #" +
+        "# ### ###  #      #  #  #  #   #   #   #" +
+        "# #     #  ###  ###  ######  #   #   # #" +
+        "# #######                              #" +
+        "#  #     #   #   #     ######  # ####  #" +
+        "#   #     #  #####          # #  #  #  #" +
+        "#    ##  ###           ######  #       #" +
+        "#              ####    #      #  #  #  #" +
+        "# ####  #####  #  #    ######  # ####  #" +
+        "# #   # #         #           #        #" +
+        "# #   # ###########   #  #  #  #  #### #" +
+        "#                    #  #  #      #    #" +
+        "########################################";
+
     private static final Random random = new Random();
-    private static final String[] MAPS = {level1MapData, level2MapData};
-    private static final int[] MAPS_HEIGHTS = {24, 24};
-    private static final int[] MAPS_WIDTHS = {24, 24};
+    private static final String[] MAPS = {level1MapData, level2MapData, level3MapData};
+    private static final int[] MAPS_HEIGHTS = {24, 24, 14};
+    private static final int[] MAPS_WIDTHS = {24, 24, 40};
     private static final int MAP_NUMBER = random.nextInt(MAPS.length);
     private static final int MAP_HEIGHT = MAPS_HEIGHTS[MAP_NUMBER];
     private static final int MAP_WIDTH = MAPS_WIDTHS[MAP_NUMBER];
@@ -114,13 +130,13 @@ public class Map {
         int exitPositionX;
         while (true) {
             do {
-                exitPositionY = random.nextInt(MAP_HEIGHT - 1) + 1;
-                exitPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
+                exitPositionY = random.nextInt(MAP_HEIGHT);  // NEED TO FIX A BUG (INDEX OUT OF BOUNDS)
+                exitPositionX = random.nextInt(MAP_WIDTH);  // NEED TO FIX A BUG (INDEX OUT OF BOUNDS)
             } while (levelMap[exitPositionY][exitPositionX] != '#');
-            if (levelMap[exitPositionY + 1][exitPositionX] == ' '
-                    || levelMap[exitPositionY - 1][exitPositionX] == ' '
-                    || levelMap[exitPositionY][exitPositionX + 1] == ' '
-                    || levelMap[exitPositionY][exitPositionX - 1] == ' ') {
+            if (exitPositionY + 1 < MAP_HEIGHT && levelMap[exitPositionY + 1][exitPositionX] == ' '
+                    || exitPositionY - 1 >= 0 && levelMap[exitPositionY - 1][exitPositionX] == ' '
+                    || exitPositionX + 1 < MAP_WIDTH && levelMap[exitPositionY][exitPositionX + 1] == ' '
+                    || exitPositionX - 1 >= 0 && levelMap[exitPositionY][exitPositionX - 1] == ' ') {
                 levelMap[exitPositionY][exitPositionX] = 'E';
                 break;
             }
