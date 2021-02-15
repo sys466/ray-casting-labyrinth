@@ -1,5 +1,3 @@
-
-
 public class ScreenRenderer {
 
     private static final char[][] levelMap = Map.initMap();
@@ -74,11 +72,11 @@ public class ScreenRenderer {
     private static void calculateScreenData(int w) {
         for (int h = screenWallPoint; h < SCREEN_HEIGHT / 2; h++) {
             if (screenWallPoint < SCREEN_HEIGHT * 0.125) {
-                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '‖' : 'X');  // TEMPORARY SOLUTION?
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '‖' : 'X');
             } else if (screenWallPoint < SCREEN_HEIGHT * 0.25) {
-                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '|' : 'x');  // TEMPORARY SOLUTION?
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '|' : 'x');
             } else if (screenWallPoint < SCREEN_HEIGHT * 0.375) {
-                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? ':' : '+');  // TEMPORARY SOLUTION?
+                screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? ':' : '+');
             } else {
                 screen.setCharAt(h * 121 + w, '·');
             }
@@ -86,7 +84,7 @@ public class ScreenRenderer {
     }
 
     private static int calculateCardParameters(boolean width) {
-        return width ? (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) * 1.4) : (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) / 4);
+        return width ? (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) * 1.25) : (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) / 5);
     }
 
     private static void drawCard() {
