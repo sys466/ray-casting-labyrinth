@@ -41,6 +41,7 @@ public class GUI extends JFrame {
         if (controls.get("RIGHT")) {
             ScreenRenderer.changeUnitPlayerPosition(0.05, true);
         }
+        ScreenRenderer.checkUnitPlayerPositionChange();
     }
 
     public static void calculateMouseMovement() {
@@ -84,7 +85,7 @@ public class GUI extends JFrame {
 
         // Tech panel components
         // ADD TIME
-        // PLAYER HAS 5 MINUTES TO FIND THE EXIT
+        // PLAYER HAS 10 MINUTES TO FIND THE EXIT
 
         // View panel components
         SimpleAttributeSet textCenterPosition = new SimpleAttributeSet();
