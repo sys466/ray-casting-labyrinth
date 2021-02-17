@@ -3,6 +3,8 @@ public class ScreenRenderer {
     private static final char[][] levelMap = Map.initMap();
     private static double unitPlayerPositionY = Map.getUnitPlayerPositionY();
     private static double unitPlayerPositionX = Map.getUnitPlayerPositionX();
+    private static int unitPlayerPositionYOld = (int) Math.floor(unitPlayerPositionY);
+    private static int unitPlayerPositionXOld = (int) Math.floor(unitPlayerPositionX);
     private static double unitPlayerViewAngle = 0;
     private static final double UNIT_PLAYER_VIEW_DISTANCE = 16.0;
     private static double unitPlayerFOVVectorWallDistance;
@@ -84,7 +86,19 @@ public class ScreenRenderer {
     }
 
     private static int calculateCardParameters(boolean width) {
-        return width ? (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) * 1.25) : (int) Math.floor((16 - unitPlayerFOVVectorCardDistance) / 5);
+        if (width) {
+            int w = (int) Math.floor(30 - unitPlayerFOVVectorCardDistance * 3);
+            if (w <= 0) {
+                w = 1;
+            }
+            return w;
+        } else {
+            int h = (int) Math.floor(4 - unitPlayerFOVVectorCardDistance * 0.4);
+            if (h <= 0) {
+                h = 1;
+            }
+            return h;
+        }
     }
 
     private static void drawCard() {
@@ -94,7 +108,7 @@ public class ScreenRenderer {
                 if (j == (20 - i) * 121 - 1) {
                     break;
                 } else {
-                    screen.setCharAt(j, unitPlayerFOVVectorCardDistance > 8 ? ':' : '#');  // TEMPORARY SOLUTION
+                    screen.setCharAt(j, unitPlayerFOVVectorCardDistance > 4 ? ':' : '#');  // TEMPORARY SOLUTION
                 }
             }
         }
@@ -148,6 +162,23 @@ public class ScreenRenderer {
         if (levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX + unitPlayerPositionXStep)] != '#'
             && levelMap[(int) unitPlayerPositionY][(int) (unitPlayerPositionX + unitPlayerPositionXStep)] != 'E') {
             unitPlayerPositionX += unitPlayerPositionXStep;
+        }
+    }
+
+    public static void checkUnitPlayerPositionChange() {
+        if ((int) Math.floor(unitPlayerPositionY) != unitPlayerPositionYOld
+        || (int) Math.floor(unitPlayerPositionX) != unitPlayerPositionXOld
+        || levelMap[unitPlayerPositionYOld][unitPlayerPositionXOld] == ' ') {
+            updateUnitPlayerPosition();
+        }
+    }
+
+    private static void updateUnitPlayerPosition() {
+        levelMap[unitPlayerPositionYOld][unitPlayerPositionXOld] = ' ';
+        unitPlayerPositionYOld = (int) Math.floor(unitPlayerPositionY);
+        unitPlayerPositionXOld = (int) Math.floor(unitPlayerPositionX);
+        if (levelMap[unitPlayerPositionYOld][unitPlayerPositionXOld] == ' ') {
+            levelMap[unitPlayerPositionYOld][unitPlayerPositionXOld] = 'P';
         }
     }
 
