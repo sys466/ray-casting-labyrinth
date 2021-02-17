@@ -20,7 +20,7 @@ public class Map {
         "###### ###### # ## #   #" +
         "#      #   #### ## #####" +
         "# #### # # #           #" +
-        "# #    # # #    ###    #" +
+        "# #    # # #    # #    #" +
         "# #### # ###           #" +
         "# #    #      ###### # #" +
         "# #### ########      # #" +
@@ -90,17 +90,18 @@ public class Map {
                 levelMapDataIndex++;
             }
         }
-        generatePlayer(levelMap);
+        generateUnitPlayer(levelMap);
         generateCards(levelMap);
         generateExit(levelMap);
         return levelMap;
     }
 
-    private static void generatePlayer(char[][] levelMap) {
+    private static void generateUnitPlayer(char[][] levelMap) {
         do {
             unitPlayerPositionY = random.nextInt(MAP_HEIGHT - 1) + 1;
             unitPlayerPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
         } while (levelMap[unitPlayerPositionY][unitPlayerPositionX] != ' ');
+        levelMap[unitPlayerPositionY][unitPlayerPositionX] = 'P';
     }
 
     public static int getUnitPlayerPositionY() {
@@ -130,8 +131,8 @@ public class Map {
         int exitPositionX;
         while (true) {
             do {
-                exitPositionY = random.nextInt(MAP_HEIGHT);  // NEED TO FIX A BUG (INDEX OUT OF BOUNDS)
-                exitPositionX = random.nextInt(MAP_WIDTH);  // NEED TO FIX A BUG (INDEX OUT OF BOUNDS)
+                exitPositionY = random.nextInt(MAP_HEIGHT);
+                exitPositionX = random.nextInt(MAP_WIDTH);
             } while (levelMap[exitPositionY][exitPositionX] != '#');
             if (exitPositionY + 1 < MAP_HEIGHT && levelMap[exitPositionY + 1][exitPositionX] == ' '
                     || exitPositionY - 1 >= 0 && levelMap[exitPositionY - 1][exitPositionX] == ' '
