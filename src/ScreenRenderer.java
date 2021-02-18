@@ -18,11 +18,15 @@ public class ScreenRenderer {
     private static int cardScreenPosition;
     private static int cardWidth;
     private static int cardHeight;
-    private static final int SCREEN_WIDTH = 120;
     private static final int SCREEN_HEIGHT = 40;
+    private static final int SCREEN_WIDTH = 120;
     private static final StringBuilder screen = new StringBuilder();
     private static final String SCREEN_TEMPLATE = initScreenTemplate();
     private static int screenWallPoint;
+
+    public static char[][] getLevelMap() {
+        return levelMap;
+    }
 
     private static String initScreenTemplate() {
         StringBuilder template = new StringBuilder();
