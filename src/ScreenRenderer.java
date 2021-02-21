@@ -3,14 +3,18 @@ public class ScreenRenderer {
     private static final char[][] levelMap = Map.initMap();
     private static double unitPlayerPositionY = Map.getUnitPlayerPositionY();
     private static double unitPlayerPositionX = Map.getUnitPlayerPositionX();
-    private static int unitPlayerPositionYOld = (int) Math.floor(unitPlayerPositionY);
-    private static int unitPlayerPositionXOld = (int) Math.floor(unitPlayerPositionX);
     private static double unitPlayerViewAngle = 0;
     private static final double UNIT_PLAYER_VIEW_DISTANCE = 16.0;
     private static double unitPlayerFOVVectorWallDistance;
     private static double unitPlayerFOVVectorCardDistance;
+    private static double unitPlayerFOVVectorHunterDistance;
     private static boolean isFOVVectorReachedWall;
     private static boolean isFOVVectorReachedExit;
+    private static int hunterVectorsSum;
+    private static int hunterVectorsCount;
+    private static int hunterWidth;
+    private static int hunterHeight;
+    private static int hunterScreenPosition;
     private static final int CARD_NUMBER = 3;
     private static int currentCardNumber = 0;
     private static int cardVectorsSum;
@@ -22,10 +26,18 @@ public class ScreenRenderer {
     private static final int SCREEN_WIDTH = 120;
     private static final StringBuilder screen = new StringBuilder();
     private static final String SCREEN_TEMPLATE = initScreenTemplate();
-    private static int screenWallPoint;
+    private static int wallScreenPosition;
 
     public static char[][] getLevelMap() {
         return levelMap;
+    }
+
+    public static double getUnitPlayerPositionY() {
+        return unitPlayerPositionY;
+    }
+
+    public static double getUnitPlayerPositionX() {
+        return unitPlayerPositionX;
     }
 
     private static String initScreenTemplate() {
@@ -55,6 +67,7 @@ public class ScreenRenderer {
         boolean isFOVVectorReachedCard = false;
         isFOVVectorReachedWall = false;
         isFOVVectorReachedExit = false;
+        boolean isIsFOVVectorReachedHunter = false;
         unitPlayerFOVVectorWallDistance = 0;
         while (!isFOVVectorReachedWall && !isFOVVectorReachedExit && unitPlayerFOVVectorWallDistance < UNIT_PLAYER_VIEW_DISTANCE) {
             unitPlayerFOVVectorWallDistance += 0.1;
@@ -64,7 +77,8 @@ public class ScreenRenderer {
                 isFOVVectorReachedWall = true;
             } else if (levelMap[positionYChange][positionXChange] == 'E') {
                 isFOVVectorReachedExit = true;
-            } else if (!isFOVVectorReachedCard) {
+            }
+            if (!isFOVVectorReachedCard) {
                 if (levelMap[positionYChange][positionXChange] == 'C') {
                     isFOVVectorReachedCard = true;
                     cardVectorsSum += w;
@@ -72,16 +86,24 @@ public class ScreenRenderer {
                     unitPlayerFOVVectorCardDistance = unitPlayerFOVVectorWallDistance;
                 }
             }
+            if (!isIsFOVVectorReachedHunter) {
+                if (Hunter.meetHunter(positionYChange, positionXChange)) {
+                    isIsFOVVectorReachedHunter = true;
+                    hunterVectorsSum += w;
+                    hunterVectorsCount++;
+                    unitPlayerFOVVectorHunterDistance = unitPlayerFOVVectorWallDistance;
+                }
+            }
         }
     }
 
     private static void calculateScreenData(int w) {
-        for (int h = screenWallPoint; h < SCREEN_HEIGHT / 2; h++) {
-            if (screenWallPoint < SCREEN_HEIGHT * 0.125) {
+        for (int h = wallScreenPosition; h < SCREEN_HEIGHT / 2; h++) {
+            if (wallScreenPosition < SCREEN_HEIGHT * 0.125) {
                 screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '‖' : 'X');
-            } else if (screenWallPoint < SCREEN_HEIGHT * 0.25) {
+            } else if (wallScreenPosition < SCREEN_HEIGHT * 0.25) {
                 screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? '|' : 'x');
-            } else if (screenWallPoint < SCREEN_HEIGHT * 0.375) {
+            } else if (wallScreenPosition < SCREEN_HEIGHT * 0.375) {
                 screen.setCharAt(h * 121 + w, isFOVVectorReachedWall ? ':' : '+');
             } else {
                 screen.setCharAt(h * 121 + w, '·');
@@ -91,13 +113,13 @@ public class ScreenRenderer {
 
     private static int calculateCardParameters(boolean width) {
         if (width) {
-            int w = (int) Math.floor(30 - unitPlayerFOVVectorCardDistance * 3);
+            int w = (int) (30 - unitPlayerFOVVectorCardDistance * 3);
             if (w <= 0) {
                 w = 1;
             }
             return w;
         } else {
-            int h = (int) Math.floor(4 - unitPlayerFOVVectorCardDistance * 0.4);
+            int h = (int) (4 - unitPlayerFOVVectorCardDistance * 0.4);
             if (h <= 0) {
                 h = 1;
             }
@@ -112,7 +134,36 @@ public class ScreenRenderer {
                 if (j == (20 - i) * 121 - 1) {
                     break;
                 } else {
-                    screen.setCharAt(j, unitPlayerFOVVectorCardDistance > 4 ? ':' : '#');  // TEMPORARY SOLUTION
+                    screen.setCharAt(j, unitPlayerFOVVectorCardDistance > 4 ? ':' : '#');
+                }
+            }
+        }
+    }
+
+    private static int calculateHunterParameters(boolean width) {
+        if (width) {
+            int w = (int) (8 - unitPlayerFOVVectorHunterDistance * 0.5);
+            if (w <= 0) {
+                w = 1;
+            }
+            return w;
+        } else {
+            int h = (int) (16 - unitPlayerFOVVectorHunterDistance);
+            if (h <= 0) {
+                h = 1;
+            }
+            return h;
+        }
+    }
+
+    private static void drawHunter() {
+        for (int i = 0; i < hunterHeight; i++) {
+            int index = (19 - i) * 121 + hunterScreenPosition;
+            for (int j = index; j < index + hunterWidth; j++) {
+                if (j == (20 - i) * 121 - 1) {
+                    break;
+                } else {
+                    screen.setCharAt(j, unitPlayerFOVVectorHunterDistance > 4 ? 'o' : 'O');  // TEMPORARY SOLUTION
                 }
             }
         }
@@ -128,11 +179,13 @@ public class ScreenRenderer {
         screen.append(SCREEN_TEMPLATE);
         cardVectorsSum = 0;
         cardVectorsCount = 0;
+        hunterVectorsSum = 0;
+        hunterVectorsCount = 0;
         for (int w = 0; w < SCREEN_WIDTH; w++) {
             calculateVectorDistance(w);
             if (isFOVVectorReachedWall || isFOVVectorReachedExit) {
-                screenWallPoint = (int) Math.floor(SCREEN_HEIGHT / 2.0 - SCREEN_HEIGHT / 2.0 / (unitPlayerFOVVectorWallDistance * 1.25));
-                if (screenWallPoint < 0) { screenWallPoint = 0; }
+                wallScreenPosition = (int) (SCREEN_HEIGHT / 2.0 - SCREEN_HEIGHT / 2.0 / (unitPlayerFOVVectorWallDistance * 1.25));
+                if (wallScreenPosition < 0) { wallScreenPosition = 0; }
                 calculateScreenData(w);
             }
         }
@@ -144,6 +197,15 @@ public class ScreenRenderer {
                 cardScreenPosition = 0;
             }
             drawCard();
+        }
+        if (hunterVectorsCount > 0) {
+            hunterWidth = calculateHunterParameters(true);
+            hunterHeight = calculateHunterParameters(false);
+            hunterScreenPosition = hunterVectorsSum / hunterVectorsCount - hunterWidth / 2;
+            if (hunterScreenPosition < 0) {
+                hunterScreenPosition = 0;
+            }
+            drawHunter();
         }
         completeScreenData();
         GUI.renderScreen(screen.toString());
@@ -169,23 +231,6 @@ public class ScreenRenderer {
         }
     }
 
-    public static void checkUnitPlayerPositionChange() {
-        if ((int) Math.floor(unitPlayerPositionY) != unitPlayerPositionYOld
-        || (int) Math.floor(unitPlayerPositionX) != unitPlayerPositionXOld
-        || levelMap[unitPlayerPositionYOld][unitPlayerPositionXOld] == ' ') {
-            updateUnitPlayerPosition();
-        }
-    }
-
-    private static void updateUnitPlayerPosition() {
-        levelMap[unitPlayerPositionYOld][unitPlayerPositionXOld] = ' ';
-        unitPlayerPositionYOld = (int) Math.floor(unitPlayerPositionY);
-        unitPlayerPositionXOld = (int) Math.floor(unitPlayerPositionX);
-        if (levelMap[unitPlayerPositionYOld][unitPlayerPositionXOld] == ' ') {
-            levelMap[unitPlayerPositionYOld][unitPlayerPositionXOld] = 'P';
-        }
-    }
-
     public static boolean checkUnitPlayerPositionNextToExit() {
         return levelMap[(int) unitPlayerPositionY + 1][(int) unitPlayerPositionX] == 'E'
                 || levelMap[(int) unitPlayerPositionY - 1][(int) unitPlayerPositionX] == 'E'
@@ -208,6 +253,10 @@ public class ScreenRenderer {
 
     public static void exitingMessage() {  // REWORK MESSAGE
         GUI.renderScreen("YOU FOUND THE EXIT\nYOU SURVIVED");
+    }
+
+    public static void dyingMessage() {
+        GUI.renderScreen("YOU ARE DEAD\nGAME OVER");
     }
 
 }
