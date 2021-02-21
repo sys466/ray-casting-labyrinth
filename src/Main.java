@@ -12,12 +12,19 @@ public class Main {
             ScreenRenderer.runScreenRenderingCycle();
             GUI.calculatePlayerMovement();
             GUI.calculateMouseMovement();
+            if (Hunter.moveHunters()) {
+                ScreenRenderer.dyingMessage();
+                break;
+            }
+
             if (ScreenRenderer.checkUnitPlayerPositionNextToExit() && ScreenRenderer.checkIfAllCardsCollected()) {
                 ScreenRenderer.exitingMessage();
                 break;
             }
             if (ScreenRenderer.checkUnitPlayerPositionOnCard()) {
                 ScreenRenderer.pickUpCard();
+                Hunter.addHunter();
+                Hunter.increaseSpeed();
             }
             Thread.sleep(1000 / 60);
         }
