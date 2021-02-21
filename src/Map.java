@@ -4,76 +4,60 @@ public class Map {
 
     private static final String level1MapData =
         "########################" +
-        "#         #        ### #" +
-        "# ####### # #### ##### #" +
-        "# #     #   ## # #  #  #" +
-        "# # ### # # ##   #  # ##" +
-        "# # # #   # ## # #  # ##" +
-        "# ### ##### ####       #" +
-        "#           #### ##### #" +
-        "# # ### ##           # #" +
-        "# # ### ############ # #" +
-        "# # #              # # #" +
-        "# # # ##### ###### # # #" +
-        "# ######### #    # # # #" +
-        "#           # #  # # # #" +
-        "###### ###### # ## #   #" +
-        "#      #   #### ## #####" +
-        "# #### # # #           #" +
-        "# #    # # #    # #    #" +
-        "# #### # ###           #" +
-        "# #    #      ###### # #" +
-        "# #### ########      # #" +
-        "#    #        #### ### #" +
-        "#    ########      #   #" +
+        "# #       # #   #      #" +
+        "# # ##### #   # ###### #" +
+        "# # #     # # #      # #" +
+        "# # ##### ##### ###### #" +
+        "# #     #              #" +
+        "# ##### # ######## #####" +
+        "# #   ### #      # #   #" +
+        "# # #     # #### # ### #" +
+        "# # ### # ### #  #   # #" +
+        "#   #   # # # #### # # #" +
+        "####### # # # #    # # #" +
+        "#  #    # # # # ## # # #" +
+        "# ## #### # # #  #     #" +
+        "#    #        ## #######" +
+        "###### ######          #" +
+        "#       # # ######## # #" +
+        "# ####### #        # # #" +
+        "# #   # # ## ##### # # #" +
+        "# # # #    # # # #   # #" +
+        "# ###   #  # # # ##### #" +
+        "# # ### #  # # # #   # #" +
+        "#   #   #      #   #   #" +
         "########################";
 
     private static final String level2MapData =
         "########################" +
-        "# #         ####    #  #" +
-        "# # #    ##  ##  #  ## #" +
-        "# #   #  ##  ####      #" +
-        "#    #  ###        #####" +
-        "#####   ###  ###########" +
-        "#        #             #" +
-        "# ####### ### ##########" +
-        "#         # #          #" +
-        "#         # #   #####  #" +
-        "# ########   #######   #" +
-        "#                      #" +
-        "###    #####  ###  ##  #" +
-        "#  ##         #        #" +
-        "#    ##   #####  ###   #" +
-        "#                      #" +
-        "#   # # #              #" +
-        "#                      #" +
-        "#    # #               #" +
-        "###                    #" +
-        "#          ######  #   #" +
-        "#  #########      # #  #" +
-        "#          #     #     #" +
+        "#  #  #     #   #   #  #" +
+        "#  #      #   #   #   ##" +
+        "#  #  #     #   #   #  #" +
+        "#  ####       #   #    #" +
+        "##                  #  #" +
+        "# #                    #" +
+        "#     ######    ##  #  #" +
+        "# #   #    #    ##     #" +
+        "##    #    #    ##     #" +
+        "#     #    #           #" +
+        "#     ##  ##  ####   ###" +
+        "# ###         #        #" +
+        "# #                  # #" +
+        "# #  ## ######  ##     #" +
+        "#       #        #     #" +
+        "# #  #  #      # # #   #" +
+        "# #  #  ##########   # #" +
+        "# #     #   #   #      #" +
+        "# ##  #   #   #   #    #" +
+        "#       #   #   #   #  #" +
+        "### ##    #   #   #   ##" +
+        "#     #     #   #   #  #" +
         "########################";
 
-    private static final String level3MapData =
-        "########################################" +
-        "#          #  ##  #     #    #   #   # #" +
-        "# ### ###  #      #  #  #  #   #   #   #" +
-        "# #     #  ###  ###  ######  #   #   # #" +
-        "# #######                              #" +
-        "#  #     #   #   #     ######  # ####  #" +
-        "#   #     #  #####          # #  #  #  #" +
-        "#    ##  ###           ######  #       #" +
-        "#              ####    #      #  #  #  #" +
-        "# ####  #####  #  #    ######  # ####  #" +
-        "# #   # #         #           #        #" +
-        "# #   # ###########   #  #  #  #  #### #" +
-        "#                    #  #  #      #    #" +
-        "########################################";
-
     private static final Random random = new Random();
-    private static final String[] MAPS = {level1MapData, level2MapData, level3MapData};
-    private static final int[] MAPS_HEIGHTS = {24, 24, 14};
-    private static final int[] MAPS_WIDTHS = {24, 24, 40};
+    private static final String[] MAPS = {level1MapData, level2MapData};
+    private static final int[] MAPS_HEIGHTS = {24, 24};
+    private static final int[] MAPS_WIDTHS = {24, 24};
     private static final int MAP_NUMBER = random.nextInt(MAPS.length);
     private static final int MAP_HEIGHT = MAPS_HEIGHTS[MAP_NUMBER];
     private static final int MAP_WIDTH = MAPS_WIDTHS[MAP_NUMBER];
@@ -101,7 +85,6 @@ public class Map {
             unitPlayerPositionY = random.nextInt(MAP_HEIGHT - 1) + 1;
             unitPlayerPositionX = random.nextInt(MAP_WIDTH - 1) + 1;
         } while (levelMap[unitPlayerPositionY][unitPlayerPositionX] != ' ');
-        levelMap[unitPlayerPositionY][unitPlayerPositionX] = 'P';
     }
 
     public static int getUnitPlayerPositionY() {
