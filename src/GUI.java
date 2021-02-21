@@ -41,7 +41,6 @@ public class GUI extends JFrame {
         if (controls.get("RIGHT")) {
             ScreenRenderer.changeUnitPlayerPosition(0.05, true);
         }
-        ScreenRenderer.checkUnitPlayerPositionChange();
     }
 
     public static void calculateMouseMovement() {
