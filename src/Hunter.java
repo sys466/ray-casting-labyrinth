@@ -1,13 +1,14 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Hunter {
+class Hunter {
 
     private static final ArrayList<Hunter> hunters = new ArrayList<>();
     private static final Random random = new Random();
-    private static final char[][] levelMap = ScreenRenderer.getLevelMap();
+    private static final char[][] levelMap = Map.getLevelMap();
     private static final int MAP_HEIGHT = levelMap.length;
     private static final int MAP_WIDTH = levelMap[0].length;
+    private static final double HUNTER_MAP_HALF_WIDTH = 0.1;
     private static double speed = 0.02;
 
     private double positionY;
@@ -37,9 +38,10 @@ public class Hunter {
         return false;
     }
 
-    public static boolean meetHunter(int y, int x) {
+    public static boolean checkFOVVectorReachedHunter(double vectorPositionY, double vectorPositionX) {
         for (Hunter hunter: hunters) {
-            if (y == (int) Math.floor(hunter.positionY) && x == (int) Math.floor(hunter.positionX)) {
+            if (vectorPositionY > hunter.positionY - HUNTER_MAP_HALF_WIDTH && vectorPositionY < hunter.positionY + HUNTER_MAP_HALF_WIDTH
+            && vectorPositionX > hunter.positionX - HUNTER_MAP_HALF_WIDTH && vectorPositionX < hunter.positionX + HUNTER_MAP_HALF_WIDTH) {
                 return true;
             }
         }
@@ -47,8 +49,8 @@ public class Hunter {
     }
 
     private boolean checkUnitPlayerPosition() {
-        return (int) Math.floor(this.positionY) == (int) Math.floor(ScreenRenderer.getUnitPlayerPositionY())
-                && (int) Math.floor(this.positionX) == (int) Math.floor(ScreenRenderer.getUnitPlayerPositionX());
+        return (int) Math.floor(this.positionY) == (int) Math.floor(Player.getUnitPlayerPositionY())
+                && (int) Math.floor(this.positionX) == (int) Math.floor(Player.getUnitPlayerPositionX());
     }
 
     private void generatePosition() {
@@ -69,8 +71,8 @@ public class Hunter {
                     case 2 -> positionX--;
                     default -> positionX++;
                 }
-                if (positionY == (int) ScreenRenderer.getUnitPlayerPositionY()
-                && positionX == (int) ScreenRenderer.getUnitPlayerPositionX()) {
+                if (positionY == (int) Player.getUnitPlayerPositionY()
+                && positionX == (int) Player.getUnitPlayerPositionX()) {
                     this.direction = i;
                     return;
                 }
