@@ -7,7 +7,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class GUI extends JFrame {
+class GUI extends JFrame {
 
     private static double mouseX;
     private static Robot robot;
@@ -28,28 +28,28 @@ public class GUI extends JFrame {
         viewPort.setText(screenData);
     }
 
-    public static void calculatePlayerMovement() {
+    public static void calculatePlayerKeyboardMovement() {
         if (controls.get("UP")) {
-            ScreenRenderer.changeUnitPlayerPosition(0.05, false);
+            Player.changeUnitPlayerPosition(0.05, false);
         }
         if (controls.get("DOWN")) {
-            ScreenRenderer.changeUnitPlayerPosition(-0.05, false);
+            Player.changeUnitPlayerPosition(-0.05, false);
         }
         if (controls.get("LEFT")) {
-            ScreenRenderer.changeUnitPlayerPosition(-0.05, true);
+            Player.changeUnitPlayerPosition(-0.05, true);
         }
         if (controls.get("RIGHT")) {
-            ScreenRenderer.changeUnitPlayerPosition(0.05, true);
+            Player.changeUnitPlayerPosition(0.05, true);
         }
     }
 
-    public static void calculateMouseMovement() {
+    public static void calculatePlayerMouseMovement() {
         double newMouseX = MouseInfo.getPointerInfo().getLocation().getX();
         double changeValue = Math.abs(newMouseX - mouseX) / 1000;
         if (newMouseX > mouseX) {
-            ScreenRenderer.changeUnitPlayerViewAngle(changeValue);
+            Player.changeUnitPlayerViewAngle(changeValue);
         } else if (newMouseX < mouseX) {
-            ScreenRenderer.changeUnitPlayerViewAngle(-changeValue);
+            Player.changeUnitPlayerViewAngle(-changeValue);
         }
         mouseX = newMouseX;
         if (mouseX > 1260 || mouseX < 460) {  // MAKE LESS SPECIFIC
