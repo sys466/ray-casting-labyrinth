@@ -9,22 +9,18 @@ public class Main {
         SwingUtilities.invokeAndWait(initGUI);
 
         while (true) {
-            ScreenRenderer.runScreenRenderingCycle();
-            GUI.calculatePlayerMovement();
-            GUI.calculateMouseMovement();
+            FOV.runRenderingCycle();
+            GUI.calculatePlayerKeyboardMovement();
+            GUI.calculatePlayerMouseMovement();
+            Card.checkUnitPlayerPositionOnCard();
             if (Hunter.moveHunters()) {
-                ScreenRenderer.dyingMessage();
+                FOV.dyingMessage();
                 break;
             }
 
-            if (ScreenRenderer.checkUnitPlayerPositionNextToExit() && ScreenRenderer.checkIfAllCardsCollected()) {
-                ScreenRenderer.exitingMessage();
+            if (Map.checkUnitPlayerPositionOnExit() && Card.checkAllCardsCollected()) {
+                FOV.exitingMessage();
                 break;
-            }
-            if (ScreenRenderer.checkUnitPlayerPositionOnCard()) {
-                ScreenRenderer.pickUpCard();
-                Hunter.addHunter();
-                Hunter.increaseSpeed();
             }
             Thread.sleep(1000 / 60);
         }
