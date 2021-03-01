@@ -28,6 +28,15 @@ class Hunter {
         hunters.add(new Hunter());
     }
 
+    private void generatePosition() {
+        do {
+            this.positionY = random.nextInt(MAP_HEIGHT - 1) + 1;
+            this.positionX = random.nextInt(MAP_WIDTH - 1) + 1;
+        } while (levelMap[(int) this.positionY][(int) this.positionX] != ' ');
+        this.positionY += 0.5;
+        this.positionX += 0.5;
+    }
+
     public static boolean moveHunters() {
         for (Hunter hunter: hunters) {
             hunter.move();
@@ -46,18 +55,6 @@ class Hunter {
             }
         }
         return false;
-    }
-
-    private boolean checkUnitPlayerPosition() {
-        return (int) Math.floor(this.positionY) == (int) Math.floor(Player.getUnitPlayerPositionY())
-                && (int) Math.floor(this.positionX) == (int) Math.floor(Player.getUnitPlayerPositionX());
-    }
-
-    private void generatePosition() {
-        do {
-            this.positionY = random.nextInt(MAP_HEIGHT - 1) + 1;
-            this.positionX = random.nextInt(MAP_WIDTH - 1) + 1;
-        } while (levelMap[(int) this.positionY][(int) this.positionX] != ' ');
     }
 
     private void scan() {
@@ -80,6 +77,43 @@ class Hunter {
         }
     }
 
+    private void move() {
+        this.scan();
+        double stepY = 0;
+        double stepX = 0;
+        double centerY = 0;
+        double centerX = 0;
+        switch (this.direction) {
+            case 0 -> {
+                stepY = -speed;
+                centerY = -0.5;
+            }
+            case 1 -> {
+                stepY = speed;
+                centerY = 0.5;
+            }
+            case 2 -> {
+                stepX = -speed;
+                centerX = -0.5;
+            }
+            default -> {
+                stepX = speed;
+                centerX = 0.5;
+            }
+        }
+        if (levelMap[(int) (this.positionY + stepY + centerY)][(int) (this.positionX + stepX + centerX)] == ' ') {
+            this.positionY += stepY;
+            this.positionX += stepX;
+        } else {
+            changeDirection();
+        }
+    }
+
+    private boolean checkUnitPlayerPosition() {
+        return (int) Math.floor(this.positionY) == (int) Math.floor(Player.getUnitPlayerPositionY())
+                && (int) Math.floor(this.positionX) == (int) Math.floor(Player.getUnitPlayerPositionX());
+    }
+
     private void changeDirection() {
         int newDirection;
         do {
@@ -90,24 +124,6 @@ class Hunter {
 
     public static void increaseSpeed() {
         speed += 0.01;
-    }
-
-    private void move() {
-        this.scan();
-        double stepY = 0;
-        double stepX = 0;
-        switch (this.direction) {
-            case 0 -> stepY = -speed;
-            case 1 -> stepY = speed;
-            case 2 -> stepX = -speed;
-            default -> stepX = speed;
-        }
-        if (levelMap[(int) (this.positionY + stepY)][(int) (this.positionX + stepX)] == ' ') {
-            this.positionY += stepY;
-            this.positionX += stepX;
-        } else {
-            changeDirection();
-        }
     }
 
 }
