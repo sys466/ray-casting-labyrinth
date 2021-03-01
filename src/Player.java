@@ -15,6 +15,8 @@ class Player {
             unitPlayerPositionY = RANDOM.nextInt(MAP_HEIGHT - 1) + 1;
             unitPlayerPositionX = RANDOM.nextInt(MAP_WIDTH - 1) + 1;
         } while (LEVEL_MAP[(int) unitPlayerPositionY][(int) unitPlayerPositionX] != ' ');
+        unitPlayerPositionY += 0.5;
+        unitPlayerPositionX += 0.5;
     }
 
     public static void changeUnitPlayerViewAngle(double value) { unitPlayerViewAngle += value; }
