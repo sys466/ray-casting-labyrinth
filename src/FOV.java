@@ -100,8 +100,8 @@ class FOV {
         // Drawing wall or exit
         if (isFOVVectorReachedWall || isFOVVectorReachedExit) {
             int wallOrExitHeight = (int) (SCREEN_HEIGHT / 2 - SCREEN_HEIGHT / 2 / (unitPlayerFOVVectorWallOrExitDistance * 1.25));
-            if (wallOrExitHeight < 0) {
-                wallOrExitHeight = 0;
+            if (wallOrExitHeight < 1) {
+                wallOrExitHeight = 1;
             }
 
             for (int h = wallOrExitHeight; h < SCREEN_HEIGHT / 2; h++) {
@@ -119,7 +119,17 @@ class FOV {
 
         // Drawing card
         if (isFOVVectorReachedCard) {
-            int cardHeight = (int) (SCREEN_HEIGHT / 2 - (Card.getCardFovHalfHeight() - unitPlayerFOVVectorCardDistance * 0.25));
+            int cardHeight;
+            if (unitPlayerFOVVectorCardDistance > 6) {
+                cardHeight = 1;
+            } else if (unitPlayerFOVVectorCardDistance > 4) {
+                cardHeight = 2;
+            } else if (unitPlayerFOVVectorCardDistance > 2) {
+                cardHeight = 3;
+            } else {
+                cardHeight = 4;
+            }
+            cardHeight = SCREEN_HEIGHT / 2 - cardHeight;
 
             for (int h = cardHeight; h < SCREEN_HEIGHT / 2; h++) {
                 screen.setCharAt(h * 121 + w, unitPlayerFOVVectorCardDistance > 4 ? ':' : '#');
@@ -129,8 +139,8 @@ class FOV {
         // Drawing hunter
         if (isFOVVectorReachedHunter) {
             int hunterHeight = (int) (SCREEN_HEIGHT / 2 - SCREEN_HEIGHT / 2 / (unitPlayerFOVVectorHunterDistance * 1.25));
-            if (hunterHeight < 0) {
-                hunterHeight = 0;
+            if (hunterHeight < 1) {
+                hunterHeight = 1;
             }
 
             for (int h = hunterHeight; h < SCREEN_HEIGHT / 2; h++) {
