@@ -7,7 +7,6 @@ class Card {
     private static final ArrayList<Card> CARDS = new ArrayList<>();
     private static final int CARDS_NUMBER = 3;  // Can be adjusted
     private static final double CARD_MAP_HALF_WIDTH = 0.15;
-    private static final int CARD_FOV_HALF_HEIGHT = 4;
 
     private final double positionY;
     private final double positionX;
@@ -57,10 +56,6 @@ class Card {
 
     public static boolean checkAllCardsCollected() {
         return CARDS.isEmpty();
-    }
-
-    public static int getCardFovHalfHeight() {
-        return CARD_FOV_HALF_HEIGHT;
     }
 
 }
