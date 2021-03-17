@@ -6,8 +6,8 @@ class Hunter {
     private static final ArrayList<Hunter> hunters = new ArrayList<>();
     private static final Random random = new Random();
     private static final char[][] levelMap = Map.getLevelMap();
-    private static final int MAP_HEIGHT = levelMap.length;
-    private static final int MAP_WIDTH = levelMap[0].length;
+    private static final int MAP_HEIGHT = Map.getMapHeight();
+    private static final int MAP_WIDTH = Map.getMapWidth();
     private static final double HUNTER_MAP_HALF_WIDTH = 0.1;
     private static double speed = 0.02;
 
