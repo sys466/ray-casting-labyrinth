@@ -4,32 +4,6 @@ class Map {
 
     private static final String LEVEL_1_MAP_DATA =
         "########################" +
-        "# #       # #   #      #" +
-        "# # ##### #   # ###### #" +
-        "# # #     # # #      # #" +
-        "# # ##### ##### ###### #" +
-        "# #     #              #" +
-        "# ##### # ######## #####" +
-        "# #   ### #      # #   #" +
-        "# # #     # #### # ### #" +
-        "# # ### # ### #  #   # #" +
-        "#   #   # # # #### # # #" +
-        "####### # # # #    # # #" +
-        "#  #    # # # # ## # # #" +
-        "# ## #### # # #  #     #" +
-        "#    #        ## #######" +
-        "###### ######          #" +
-        "#       # # ######## # #" +
-        "# ####### #        # # #" +
-        "# #   # # ## ##### # # #" +
-        "# # # #    # # # #   # #" +
-        "# ###   #  # # # ##### #" +
-        "# # ### #  # # # #   # #" +
-        "#   #   #      #   #   #" +
-        "########################";
-
-    private static final String LEVEL_2_MAP_DATA =
-        "########################" +
         "#  #  #     #   #   #  #" +
         "#  #      #   #   #   ##" +
         "#  #  #     #   #   #  #" +
@@ -55,10 +29,11 @@ class Map {
         "########################";
 
     private static final Random RANDOM = new Random();
-    private static final String[] POSSIBLE_MAPS = {LEVEL_1_MAP_DATA, LEVEL_2_MAP_DATA};
-    private static final int[] POSSIBLE_MAPS_HEIGHTS = {24, 24};
-    private static final int[] POSSIBLE_MAPS_WIDTHS = {24, 24};
-    private static final int MAP_NUMBER = RANDOM.nextInt(POSSIBLE_MAPS.length);
+    private static final String[] POSSIBLE_MAPS = {LEVEL_1_MAP_DATA};
+    private static final int[] POSSIBLE_MAPS_HEIGHTS = {24};
+    private static final int[] POSSIBLE_MAPS_WIDTHS = {24};
+//    private static final int MAP_NUMBER = RANDOM.nextInt(POSSIBLE_MAPS.length);
+    private static final int MAP_NUMBER = 0;
     private static final int MAP_HEIGHT = POSSIBLE_MAPS_HEIGHTS[MAP_NUMBER];
     private static final int MAP_WIDTH = POSSIBLE_MAPS_WIDTHS[MAP_NUMBER];
     private static final char[][] LEVEL_MAP = initMap();
