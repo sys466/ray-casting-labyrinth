@@ -21,11 +21,17 @@ class GUI extends JFrame {
     }
 
     private static final JTextPane viewPort = new JTextPane();
+    private static final JTextPane cardInfo = new JTextPane();
 
     private static final HashMap<String, Boolean> controls = new HashMap<>();
 
     public static void renderScreen(String screenData) {
         viewPort.setText(screenData);
+    }
+
+    public static void updateCardInfo() {
+        String text = String.format("Cards:\n%d / %d", Card.getCardsNumber() - Card.getCardsNumberLeft(), Card.getCardsNumber());
+        cardInfo.setText(text);
     }
 
     public static void calculatePlayerKeyboardMovement() {
@@ -71,6 +77,7 @@ class GUI extends JFrame {
         setLayout(null);
         setResizable(false);
         setVisible(true);
+        updateCardInfo();
         controls.put("UP", false);
         controls.put("DOWN", false);
         controls.put("LEFT", false);
@@ -154,8 +161,31 @@ class GUI extends JFrame {
 
         JPanel statusPanel = new JPanel();
         statusPanel.setBounds(0, 800, 1200, 120);
-        statusPanel.setLayout(new BorderLayout());
+        statusPanel.setLayout(new GridLayout(1, 3, 0, 0));
         statusPanel.setBackground(Color.DARK_GRAY);
+
+        JTextPane controlsInfo = new JTextPane();
+        controlsInfo.setParagraphAttributes(textCenterPosition, false);
+        controlsInfo.setBackground(Color.BLACK);
+        controlsInfo.setForeground(Color.WHITE);
+        controlsInfo.setEditable(false);
+        controlsInfo.setText("Controls:\n W, S, A, D - move\nMOUSE - look around");
+
+        JTextPane descriptionInfo = new JTextPane();
+        descriptionInfo.setParagraphAttributes(textCenterPosition, false);
+        descriptionInfo.setBackground(Color.BLACK);
+        descriptionInfo.setForeground(Color.WHITE);
+        descriptionInfo.setEditable(false);
+        descriptionInfo.setText("Ray casting labyrinth\nby sys466");
+
+        cardInfo.setParagraphAttributes(textCenterPosition, false);
+        cardInfo.setBackground(Color.BLACK);
+        cardInfo.setForeground(Color.WHITE);
+        cardInfo.setEditable(false);
+
+        statusPanel.add(controlsInfo);
+        statusPanel.add(descriptionInfo);
+        statusPanel.add(cardInfo);
 
         // Adding panels
         add(techPanel);
