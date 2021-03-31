@@ -5,7 +5,7 @@ class Card {
 
     private static final Random RANDOM = new Random();
     private static final ArrayList<Card> CARDS = new ArrayList<>();
-    private static final int CARDS_NUMBER = 3;  // Can be adjusted
+    private static final int CARDS_NUMBER = 3;
     private static final double CARD_MAP_HALF_WIDTH = 0.15;
 
     private final double positionY;
@@ -47,6 +47,7 @@ class Card {
             if ((int) Player.getUnitPlayerPositionY() == (int) card.positionY
             && (int) Player.getUnitPlayerPositionX() == (int) card.positionX) {
                 CARDS.remove(card);
+                GUI.updateCardInfo();
                 Hunter.addHunter();
                 Hunter.increaseSpeed();
                 break;
@@ -56,6 +57,14 @@ class Card {
 
     public static boolean checkAllCardsCollected() {
         return CARDS.isEmpty();
+    }
+
+    public static int getCardsNumber() {
+        return CARDS_NUMBER;
+    }
+
+    public static int getCardsNumberLeft() {
+        return CARDS.size();
     }
 
 }
