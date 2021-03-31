@@ -17,7 +17,6 @@ public class Main {
                 FOV.dyingMessage();
                 break;
             }
-
             if (Map.checkUnitPlayerPositionOnExit() && Card.checkAllCardsCollected()) {
                 FOV.exitingMessage();
                 break;
