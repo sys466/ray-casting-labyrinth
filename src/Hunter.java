@@ -76,7 +76,8 @@ class Hunter {
         if (!this.found && ((int) this.positionY != this.positionYOld || (int) this.positionX != this.positionXOld)) {
             this.navigate();
         }
-        if (!spotted && levelMap[(int) (this.positionY + this.stepY)][(int) (this.positionX + this.stepX)] == '#') {
+        if (!spotted && (levelMap[(int) (this.positionY + this.stepY)][(int) (this.positionX + this.stepX)] == '#'
+        || levelMap[(int) (this.positionY + this.stepY)][(int) (this.positionX + this.stepX)] == 'E')) {
             this.found = false;
             this.navigate();
         }
@@ -95,7 +96,7 @@ class Hunter {
         double step = 0;
         while ((int) (this.positionY + vectorStepY * step) != (int) playerPosY
         || (int) (this.positionX + vectorStepX * step) != (int) playerPosX) {
-            if (levelMap[(int) (this.positionY + vectorStepY * step)][(int) (this.positionX + vectorStepX * step)] == '#') {
+            if (levelMap[(int) (this.positionY + vectorStepY * step)][(int) (this.positionX + vectorStepX * step)] != ' ') {
                 return false;
             }
             step += 0.05;
@@ -108,16 +109,16 @@ class Hunter {
 
     private void navigate() {  // 0 - UP, 1 - DOWN, 2 - LEFT, 3 - RIGHT
         ArrayList<Integer> paths = new ArrayList<>();
-        if (this.direction != 1 && levelMap[(int) this.positionY - 1][(int) this.positionX] != '#') {
+        if (this.direction != 1 && levelMap[(int) this.positionY - 1][(int) this.positionX] == ' ') {
             paths.add(0);
         }
-        if (this.direction != 0 && levelMap[(int) this.positionY + 1][(int) this.positionX] != '#') {
+        if (this.direction != 0 && levelMap[(int) this.positionY + 1][(int) this.positionX] == ' ') {
             paths.add(1);
         }
-        if (this.direction != 3 && levelMap[(int) this.positionY][(int) this.positionX - 1] != '#') {
+        if (this.direction != 3 && levelMap[(int) this.positionY][(int) this.positionX - 1] == ' ') {
             paths.add(2);
         }
-        if (this.direction != 2 && levelMap[(int) this.positionY][(int) this.positionX + 1] != '#') {
+        if (this.direction != 2 && levelMap[(int) this.positionY][(int) this.positionX + 1] == ' ') {
             paths.add(3);
         }
         if (paths.isEmpty()) {
