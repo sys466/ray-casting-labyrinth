@@ -169,14 +169,14 @@ class GUI extends JFrame {
         controlsInfo.setBackground(Color.BLACK);
         controlsInfo.setForeground(Color.WHITE);
         controlsInfo.setEditable(false);
-        controlsInfo.setText("Controls:\n W, S, A, D - move\nMOUSE - look around");
+        controlsInfo.setText("Controls:\n W, S, A, D - move\nMOUSE - look around\nESC - exit");
 
         JTextPane descriptionInfo = new JTextPane();
         descriptionInfo.setParagraphAttributes(textCenterPosition, false);
         descriptionInfo.setBackground(Color.BLACK);
         descriptionInfo.setForeground(Color.WHITE);
         descriptionInfo.setEditable(false);
-        descriptionInfo.setText("Ray casting labyrinth\nby sys466");
+        descriptionInfo.setText("ray casting labyrinth\nby sys466");
 
         cardInfo.setParagraphAttributes(textCenterPosition, false);
         cardInfo.setBackground(Color.BLACK);
