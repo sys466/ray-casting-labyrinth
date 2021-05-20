@@ -87,7 +87,7 @@ class GUI extends JFrame {
     private void initComponents() {
 
         // Fonts
-        Font viewPortFont = new Font("Consolas", Font.PLAIN,16);
+        Font viewPortFont = new Font("Ubuntu Mono", Font.PLAIN,16);
 
         // Tech panel components
         // ADD TIME
