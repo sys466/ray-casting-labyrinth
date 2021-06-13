@@ -65,7 +65,7 @@ class GUI extends JFrame {
     }
 
     public GUI() {
-        super("ray-casting-labyrinth by sys466");
+        super("text-based-labyrinth by Dmitrii 'sys466' Efimenko");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 920);
         setLocationRelativeTo(null);
@@ -176,7 +176,7 @@ class GUI extends JFrame {
         descriptionInfo.setBackground(Color.BLACK);
         descriptionInfo.setForeground(Color.WHITE);
         descriptionInfo.setEditable(false);
-        descriptionInfo.setText("ray casting labyrinth\nby sys466");
+        descriptionInfo.setText("Instructions:\nCollect 3 cards, then find exit\nAvoid monsters\nSurvive");
 
         cardInfo.setParagraphAttributes(textCenterPosition, false);
         cardInfo.setBackground(Color.BLACK);
