@@ -24,4 +24,4 @@ hs_err_pid*
 
 # IDE configuration files
 /.idea/
-/ray-casting-labyrinth.iml
+/text-based-labyrinth.iml
